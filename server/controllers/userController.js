@@ -106,10 +106,10 @@ const getUserProfile = asyncHandler(async (req, res) => {
 
 //@desc Get all users
 //@route POST /api/users
-//@access Private/Admin
+//@access Private
 
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({});
+  const users = await User.find({ isAdmin: false });
   res.json(users);
 });
 
