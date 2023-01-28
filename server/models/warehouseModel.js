@@ -9,10 +9,6 @@ const inventorySchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  ownerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
 });
 
 const warehouseSchema = mongoose.Schema({
@@ -21,6 +17,10 @@ const warehouseSchema = mongoose.Schema({
     required: true,
   },
   inventory: [inventorySchema],
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 const Warehouse = mongoose.model("Warehouse", warehouseSchema);

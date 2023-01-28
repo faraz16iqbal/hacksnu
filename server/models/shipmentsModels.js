@@ -9,9 +9,17 @@ const shipmentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  pendingApproval: {
-    type: Boolean,
+  product: {
+    type: String,
     required: true,
+  },
+  cost: {
+    type: Number,
+    required: true,
+  },
+  approved: {
+    type: Boolean,
+    required: false,
   },
 });
 

@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import Warehouse from "../models/warehouseModel.js";
 
-//@desc Fetch all warehouses
+//@desc Fetch all user warehouses
 //@route GET /api/warehouses
 //@access Public
 const getWarehouses = asyncHandler(async (req, res) => {
@@ -14,4 +14,12 @@ const getWarehouses = asyncHandler(async (req, res) => {
   res.json(data);
 });
 
-export { getWarehouses };
+//@desc Fetch all warehouses
+//@route GET /api/warehouses/all
+//@access Public
+const getAllWarehouses = asyncHandler(async (req, res) => {
+  const data = await Warehouse.find({});
+  res.json(data);
+});
+
+export { getWarehouses, getAllWarehouses };

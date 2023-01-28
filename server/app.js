@@ -6,6 +6,8 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import warehouseRoutes from "./routes/warehouseRoutes.js";
+import shipmentRoutes from "./routes/shipmentRoutes.js";
+
 dotenv.config();
 
 const app = express();
@@ -20,6 +22,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/warehouses", warehouseRoutes);
+app.use("/api/shipments", shipmentRoutes);
 
 //Error handling
 app.use(notFound);

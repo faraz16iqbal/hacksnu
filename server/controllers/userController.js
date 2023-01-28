@@ -70,7 +70,7 @@ const addWarehouses = asyncHandler(async (req, res) => {
   let user = await User.findById(req.user._id);
   if (user) {
     const { location, inventory } = req.body;
-    const data = Warehouse.create({
+    const data = await Warehouse.create({
       location,
       inventory,
       ownerId: req.user._id,
