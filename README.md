@@ -20,6 +20,14 @@ $ cd client && npm start
 $ cd model && python3 model3.py
 ```
 
+# Test Credentials
+
+```
+$ Admin -> email: admin@gmail.com, password: 12345
+$ Business -> email: mail@ajio.com, password: 12345
+
+```
+
 All instances should run on seperate posts.
 Configured Ports:
 

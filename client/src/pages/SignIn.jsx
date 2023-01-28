@@ -12,10 +12,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { baseUrl, setAuthToken } from "../utils/misc";
+import { setAuthToken } from "../utils/misc";
 import { useHistory } from "react-router-dom";
-
+import Axios from "../axios";
 export default function SignIn() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -32,7 +31,7 @@ export default function SignIn() {
     e.preventDefault();
     const data = { email, password };
     console.log(data);
-    const res = await axios.post(`${baseUrl}/users/login`, data);
+    const res = await Axios.post(`/users/login`, data);
     if (res.status === 200) {
       alert("Loggin in!");
       setEmail("");

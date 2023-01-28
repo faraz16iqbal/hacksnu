@@ -17,7 +17,6 @@ import {
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import axios from "axios";
-import { baseUrl } from "../utils/misc";
 import { useHistory } from "react-router-dom";
 
 export default function SignupCard() {
@@ -34,7 +33,7 @@ export default function SignupCard() {
       return;
     }
     const data = { name, email, password };
-    const res = await axios.post(`${baseUrl}/users`, data);
+    const res = await axios.post(`/users`, data);
     if (res.status === 201) {
       setName("");
       setEmail("");

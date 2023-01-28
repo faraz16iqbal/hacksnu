@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Axios from "../axios";
-import { baseUrl } from "../utils/misc";
 import {
   Box,
   Card,
@@ -119,7 +118,7 @@ const Home = () => {
 
   const getPrice = async (c2) => {
     const url = "http://127.0.0.1:5000/predict";
-    const { data } = await Axios.post(`${baseUrl}/warehouses/distance`, {
+    const { data } = await Axios.post(`/warehouses/distance`, {
       c1: loc,
       c2,
     });
@@ -134,7 +133,7 @@ const Home = () => {
     // alert("Predicted Price: " + fixedCost);
   };
   const createShipment = async (to) => {
-    await Axios.post(`${baseUrl}/shipments`, {
+    await Axios.post(`/shipments`, {
       to: to,
       from: loc,
       product: opt,

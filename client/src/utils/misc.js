@@ -1,7 +1,5 @@
 import Axios from "../axios";
 
-export const baseUrl = "http://localhost:8000/api";
-
 export const setAuthToken = (token) => {
   if (token) {
     Axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
