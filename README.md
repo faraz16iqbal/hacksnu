@@ -1,6 +1,6 @@
 # JustShipIt
 
-![JustShipIt](https://imgur.com/JHjR1nu)
+![JustShipIt](https://i.imgur.com/JHjR1nu.jpeg)
 
 Shipping and Tracking Application Built using Tensorflow, NodeJS, React, MongoDB, and Chakra UI for SNUHack 2023.
 
