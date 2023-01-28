@@ -8,23 +8,34 @@ import RouteGuard from "./components/RouteGuard";
 import "./App.css";
 import { setAuthToken } from "./utils/misc";
 import { createBrowserHistory } from "history";
+import Admin from "./pages/Admin";
 
 const history = createBrowserHistory();
 
 function App() {
   const token = localStorage.getItem("token");
+  let user = JSON.parse(localStorage.getItem("user"));
   if (token) {
     setAuthToken(token);
   }
+  useEffect(() => {}, []);
 
   return (
     <div className="App">
       <Navbar />
 
       <Router history={history}>
-        <Route exact path="/login" component={SignIn} />
-        <Route path="/register" component={SignUp} />
-        <Route exact path="/" component={Home} />
+        <Switch>
+          <Route exact path="/login" component={SignIn} />
+          <Route path="/register" component={SignUp} />
+          <RouteGuard
+            exact
+            path="/"
+            component={user && user.isAdmin ? Admin : Home}
+          />
+
+          {/* <Route path="/" component={Home} /> */}
+        </Switch>
         {/* <Route path="/register" element={<SignUp />}></Route>
         <Route path="/login" element={<SignUp />}></Route> */}
       </Router>

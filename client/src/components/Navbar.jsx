@@ -11,10 +11,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { StarIcon, CloseIcon } from "@chakra-ui/icons";
+import { useHistory } from "react-router-dom";
 
-export default function WithSubnavigation() {
+export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
-
+  let user = JSON.parse(localStorage.getItem("user"));
+  const history = useHistory();
   return (
     <Box>
       <Flex
@@ -50,21 +52,38 @@ export default function WithSubnavigation() {
           </Text>
         </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
-          spacing={6}
-        >
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"#"}
+        {!user ? (
+          <Stack
+            flex={{ base: 1, md: 0 }}
+            justify={"flex-end"}
+            direction={"row"}
+            spacing={6}
           >
-            <Link href="/login">Sign In</Link>
-          </Button>
+            <Button
+              as={"a"}
+              fontSize={"sm"}
+              fontWeight={400}
+              variant={"link"}
+              href={"#"}
+            >
+              <Link href="/login">Sign In</Link>
+            </Button>
+            <Button
+              display={{ md: "inline-flex" }}
+              fontSize={"sm"}
+              fontWeight={600}
+              color={"white"}
+              bg={"pink.400"}
+              href={"#"}
+              _hover={{
+                bg: "pink.300",
+              }}
+            >
+              {" "}
+              <Link href="/register"> Sign Up</Link>
+            </Button>
+          </Stack>
+        ) : (
           <Button
             display={{ md: "inline-flex" }}
             fontSize={"sm"}
@@ -75,10 +94,16 @@ export default function WithSubnavigation() {
             _hover={{
               bg: "pink.300",
             }}
+            onClick={() => {
+              localStorage.clear();
+              history.push("/login");
+              history.go(0);
+            }}
           >
-            <Link href="/register"> Sign Up</Link>
+            {" "}
+            Logout
           </Button>
-        </Stack>
+        )}
       </Flex>
     </Box>
   );
