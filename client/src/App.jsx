@@ -9,6 +9,7 @@ import "./App.css";
 import { setAuthToken } from "./utils/misc";
 import { createBrowserHistory } from "history";
 import Admin from "./pages/Admin";
+import Page from "./pages/Page";
 
 const history = createBrowserHistory();
 
@@ -31,7 +32,7 @@ function App() {
           <RouteGuard
             exact
             path="/"
-            component={user && user.isAdmin ? Admin : Home}
+            component={user && user.isAdmin ? Admin : Page}
           />
 
           {/* <Route path="/" component={Home} /> */}

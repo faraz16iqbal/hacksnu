@@ -258,6 +258,9 @@ const Home = () => {
       )}
       <Container w="2xl" mt="10">
         <Stack spacing={3}>
+          <Heading size="lg" color="orange.500">
+            Select An Item To Ship
+          </Heading>
           <Select
             variant="filled"
             placeholder="Select Item To Export"
@@ -271,7 +274,9 @@ const Home = () => {
         </Stack>
       </Container>
       {displayData.length ? (
-        <Heading mt="10">Select Location To Export From</Heading>
+        <Heading mt="10" color="facebook.700">
+          Select Location To Export From
+        </Heading>
       ) : null}
       <Box w="60%" mx="auto">
         <Flex
