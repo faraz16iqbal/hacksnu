@@ -9,6 +9,14 @@ const shipmentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  frombusiness: {
+    type: String,
+    required: true,
+  },
+  tobusiness: {
+    type: String,
+    required: true,
+  },
   product: {
     type: String,
     required: true,

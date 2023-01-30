@@ -6,12 +6,15 @@ import Shipment from "../models/shipmentsModels.js";
 //@access Private
 
 const createShipment = expressAsyncHandler(async (req, res) => {
-  const { to, from, product, cost } = req.body;
+  const { to, from, product, cost, tobusiness, frombusiness } = req.body;
   const shipment = await Shipment.create({
     to,
     from,
     product,
     cost,
+    approved: false,
+    tobusiness,
+    frombusiness,
   });
 
   return res.json(shipment);
@@ -27,9 +30,12 @@ const getShipments = expressAsyncHandler(async (req, res) => {
 });
 
 const editShipmentCost = expressAsyncHandler(async (req, res) => {
-  const { objId, newCost } = req.body;
+  const { objId, newCost, approved } = req.body;
   let shipments = await Shipment.findById(objId);
   shipments.cost = newCost;
+  if (approved) {
+    shipments.approved = true;
+  }
   await shipments.save();
   console.log(shipments);
   return res.json(shipments);

@@ -41,7 +41,7 @@ const getWarehouses = asyncHandler(async (req, res) => {
 //@route GET /api/warehouses/all
 //@access Public
 const getAllWarehouses = asyncHandler(async (req, res) => {
-  const data = await Warehouse.find({});
+  const data = await Warehouse.find({}).populate("ownerId");
   res.json(data);
 });
 
