@@ -22,6 +22,7 @@ import {
   useDisclosure,
   Button,
   VStack,
+  Spinner,
 } from "@chakra-ui/react";
 import { options } from "../utils/data";
 
@@ -46,8 +47,11 @@ const Home = () => {
   useEffect(() => {
     (async () => {
       const res = await Axios.get(`/warehouses`);
-      console.log(res.data);
       setData(res.data);
+    })();
+  }, []);
+  useEffect(() => {
+    (async () => {
       let res2 = await Axios.get(`/warehouses/all`);
       setFullData(res2.data);
       console.log(res2.data);
@@ -56,17 +60,14 @@ const Home = () => {
       for (let x of Users.data) {
         mapping[x["name"]] = x["_id"];
       }
-      console.log(mapping);
     })();
   }, []);
   const display = () => {
-    console.log(opt);
     if (opt === "") {
       setDisplayData([]);
       return;
     }
     let newData = [];
-    console.log(data);
     data &&
       data.filter((d) => {
         if (!d.inventory) return false;
@@ -81,7 +82,6 @@ const Home = () => {
         }
         return false;
       });
-    console.log(newData);
     setDisplayData(newData);
   };
   useEffect(() => {
@@ -90,16 +90,15 @@ const Home = () => {
 
   const filterData = (location) => {
     let endData = [];
-    console.log(fullData);
     for (let x of fullData) {
-      if (x.location === location || x.ownerId === user._id) continue;
+      if (x.location === location || x.ownerId._id === user._id) continue;
       for (let y of x.inventory) {
         if (y["item"] === opt) {
           endData.push({
             location: x.location,
             quantity: y["quantity"],
             warehouseId: x._id,
-            ownerId: x.ownerId,
+            owner: x.ownerId,
           });
           break;
         }
@@ -127,18 +126,20 @@ const Home = () => {
       quantity: qant,
       distance: data,
     });
-    console.log(res);
     const fixedCost = (res.data[0] / 100).toFixed(2);
     setCost(fixedCost);
     // alert("Predicted Price: " + fixedCost);
   };
-  const createShipment = async (to) => {
+  const createShipment = async (to, shipper) => {
     await Axios.post(`/shipments`, {
       to: to,
       from: loc,
       product: opt,
       cost,
+      tobusiness: shipper,
+      frombusiness: user.name,
     });
+
     alert("Package sent for approval!");
     setClicked(null);
     onClose();
@@ -165,11 +166,13 @@ const Home = () => {
                       }}
                       width="inherit"
                     >
-                      {users.map((x, id) => (
-                        <option value={x.name} key={id}>
-                          {x.name}
-                        </option>
-                      ))}
+                      {users
+                        .filter((x) => x._id !== user._id)
+                        .map((x, id) => (
+                          <option value={x.name} key={id}>
+                            {x.name}
+                          </option>
+                        ))}
                     </Select>
                   </Stack>
                 </Container>
@@ -180,8 +183,7 @@ const Home = () => {
                   justifyContent="center"
                 >
                   {filteredData
-
-                    .filter((cur) => cur.ownerId === mapping[company])
+                    .filter((cur) => cur.owner._id === mapping[company])
                     .map((d, id) => {
                       return (
                         <Card
@@ -222,9 +224,6 @@ const Home = () => {
                                       <Button
                                         variant="outline"
                                         colorScheme="green"
-                                        onClick={() =>
-                                          createShipment(d.location)
-                                        }
                                       >
                                         {`Price: ${cost}`}
                                       </Button>
@@ -232,7 +231,12 @@ const Home = () => {
                                     <Button
                                       variant="outline"
                                       colorScheme="green"
-                                      onClick={() => createShipment(d.location)}
+                                      onClick={() => {
+                                        createShipment(
+                                          d.location,
+                                          d.owner.name
+                                        );
+                                      }}
                                     >
                                       Ship Item
                                     </Button>
@@ -256,66 +260,79 @@ const Home = () => {
           </Modal>
         </>
       )}
-      <Container w="2xl" mt="10">
-        <Stack spacing={3}>
-          <Heading size="lg" color="orange.500">
-            Select An Item To Ship
-          </Heading>
-          <Select
-            variant="filled"
-            placeholder="Select Item To Export"
-            onChange={(e) => setOpt(e.target.value)}
-            width="inherit"
-          >
-            {options.map((x) => (
-              <option value={x}>{x}</option>
-            ))}
-          </Select>
-        </Stack>
-      </Container>
-      {displayData.length ? (
-        <Heading mt="10" color="facebook.700">
-          Select Location To Export From
-        </Heading>
-      ) : null}
-      <Box w="60%" mx="auto">
-        <Flex
-          mt="5"
-          alignItems="center"
-          flexWrap="wrap"
-          justifyContent="center"
-        >
-          {displayData.map((d) => (
-            <Card
-              px="10"
-              m={5}
-              width="250px"
-              cursor="pointer"
-              onClick={() => {
-                setQant(d.quantity);
-                filterData(d.location);
-              }}
+      {!data ? (
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+          mt="10"
+        />
+      ) : (
+        <>
+          <Container w="2xl" mt="10">
+            <Stack spacing={3}>
+              <Heading size="lg" color="orange.500">
+                Select An Item To Ship
+              </Heading>
+              <Select
+                variant="filled"
+                placeholder="Select Item To Export"
+                onChange={(e) => setOpt(e.target.value)}
+                width="inherit"
+              >
+                {options.map((x) => (
+                  <option value={x}>{x}</option>
+                ))}
+              </Select>
+            </Stack>
+          </Container>
+          {displayData.length ? (
+            <Heading mt="10" color="facebook.700">
+              Select Location To Export From
+            </Heading>
+          ) : null}
+          <Box w="60%" mx="auto">
+            <Flex
+              mt="5"
+              alignItems="center"
+              flexWrap="wrap"
+              justifyContent="center"
             >
-              <CardHeader>
-                <Heading size="md">{d.location}</Heading>
-              </CardHeader>
+              {displayData.map((d) => (
+                <Card
+                  px="10"
+                  m={5}
+                  width="250px"
+                  cursor="pointer"
+                  onClick={() => {
+                    setQant(d.quantity);
+                    filterData(d.location);
+                  }}
+                >
+                  <CardHeader>
+                    <Heading size="md">{d.location}</Heading>
+                  </CardHeader>
 
-              <CardBody>
-                <Stack divider={<StackDivider />} spacing="4">
-                  <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Quantity
-                    </Heading>
-                    <Text pt="2" fontSize="sm">
-                      {d.quantity}
-                    </Text>
-                  </Box>
-                </Stack>
-              </CardBody>
-            </Card>
-          ))}
-        </Flex>
-      </Box>
+                  <CardBody>
+                    <Stack divider={<StackDivider />} spacing="4">
+                      <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                          Quantity
+                        </Heading>
+                        <Text pt="2" fontSize="sm">
+                          {d.quantity}
+                        </Text>
+                      </Box>
+                    </Stack>
+                  </CardBody>
+                </Card>
+              ))}
+            </Flex>
+          </Box>
+        </>
+      )}
     </>
   );
 };

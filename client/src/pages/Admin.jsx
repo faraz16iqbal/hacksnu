@@ -19,6 +19,7 @@ const Admin = () => {
   const [data, setData] = useState([]);
   const [newCost, setNewCost] = useState(Array(100).fill(0));
   const [approved, setApproved] = useState(Array(100).fill(0));
+  const [approveID, setApproveID] = useState(-1);
   useEffect(() => {
     (async () => {
       const res = await Axios.get("/shipments");
@@ -26,7 +27,6 @@ const Admin = () => {
       setData(res.data);
     })();
   }, []);
-  console.log(approved);
   const handleChange = (e, i) => {
     const newState = [...data];
     newState[i] = e.target.value;
@@ -42,6 +42,7 @@ const Admin = () => {
     const modified = await Axios.patch("/shipments/edit", {
       objId,
       newCost: newCost[id],
+      approved: true,
     });
     if (modified.status === 200) {
       await fetch();
@@ -58,7 +59,9 @@ const Admin = () => {
           <Thead>
             <Tr>
               <Th>Shipment ID</Th>
+              <Th>From</Th>
               <Th>Source</Th>
+              <Th>To</Th>
               <Th>Destination</Th>
               <Th isNumeric>Cost $</Th>
               <Th>New Cost $</Th>
@@ -69,7 +72,9 @@ const Admin = () => {
             {data.map((d, id) => (
               <Tr>
                 <Td>{d._id}</Td>
+                <Td>{d.frombusiness}</Td>
                 <Td>{d.from}</Td>
+                <Td>{d.tobusiness}</Td>
                 <Td>{d.to}</Td>
                 <Td isNumeric>{d.cost}</Td>
                 <Td>
@@ -80,11 +85,11 @@ const Admin = () => {
                     value={newCost[id]}
                     key={id}
                     onChange={(e) => handleChange(e, id)}
-                    disabled={approved[id]}
+                    disabled={d.approved || approved[id]}
                   />
                 </Td>
                 <Td>
-                  {!approved[id] ? (
+                  {!d.approved && !approved[id] ? (
                     <Button
                       colorScheme="twitter"
                       onClick={() => {
@@ -97,7 +102,7 @@ const Admin = () => {
                       Approve
                     </Button>
                   ) : (
-                    <Button colorScheme="green" onClick={() => {}}>
+                    <Button colorScheme="green" cursor="default">
                       Approved!
                     </Button>
                   )}

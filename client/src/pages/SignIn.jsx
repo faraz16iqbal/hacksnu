@@ -14,6 +14,7 @@ import {
   AlertIcon,
   AlertDescription,
   Image,
+  Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { setAuthToken } from "../utils/misc";
@@ -97,6 +98,7 @@ export default function SignIn() {
                   <Checkbox>Remember me</Checkbox>
                   <Link color={"blue.400"}>Forgot password?</Link>
                 </Stack>
+
                 {error && (
                   <Alert status="error">
                     <AlertIcon />
@@ -113,6 +115,14 @@ export default function SignIn() {
                 >
                   Sign in
                 </Button>
+              </Stack>
+              <Stack pt={6}>
+                <Text align={"center"}>
+                  New here?{" "}
+                  <Link color={"blue.400"} href="/register">
+                    Register
+                  </Link>
+                </Text>
               </Stack>
             </Stack>
           </Box>

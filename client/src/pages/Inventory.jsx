@@ -9,7 +9,6 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  Input,
   Select,
   Spinner,
   Stack,
@@ -17,7 +16,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Axios from "../axios";
-import countries from "../utils/countries";
 
 const Inventory = () => {
   const [name, setName] = useState("");
